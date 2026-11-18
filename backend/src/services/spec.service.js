@@ -274,7 +274,7 @@ function listSpecsForService(db, serviceId) {
   return rows.map(mapSpecVersion);
 }
 
-function getSpecById(db, id) {
+function getSpecRowById(db, id) {
   const numericId = Number(id);
   if (!Number.isInteger(numericId) || numericId < 1) {
     throw notFound("SPEC_NOT_FOUND", "Specification version not found.");
@@ -285,13 +285,18 @@ function getSpecById(db, id) {
     throw notFound("SPEC_NOT_FOUND", "Specification version not found.");
   }
 
-  return mapSpecVersion(row);
+  return row;
+}
+
+function getSpecById(db, id) {
+  return mapSpecVersion(getSpecRowById(db, id));
 }
 
 module.exports = {
   uploadSpec,
   listSpecsForService,
   getSpecById,
+  getSpecRowById,
   parseSpecContent,
   validateSpec,
   detectSourceFormat,

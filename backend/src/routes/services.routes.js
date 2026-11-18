@@ -1,6 +1,7 @@
 const express = require("express");
 const registry = require("../services/registry.service");
 const specService = require("../services/spec.service");
+const compareService = require("../services/compare.service");
 
 function createServicesRouter(db) {
   const router = express.Router();
@@ -32,6 +33,12 @@ function createServicesRouter(db) {
   router.get("/:serviceRef/specs", (req, res) => {
     const service = registry.resolveService(db, req.params.serviceRef);
     res.json({ versions: specService.listSpecsForService(db, service.id) });
+  });
+
+  router.get("/:serviceRef/diff", async (req, res) => {
+    const service = registry.resolveService(db, req.params.serviceRef);
+    const comparison = await compareService.compareVersions(db, service, req.query.from, req.query.to);
+    res.json(comparison);
   });
 
   return router;
