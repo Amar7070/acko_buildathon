@@ -1,5 +1,7 @@
 # Build stage
-FROM node:20-alpine AS build
+# Rollup's native parser hits its stack guard on Alpine/musl with the locked
+# dependencies. Use glibc for the build; the nginx runtime stays independent.
+FROM node:20-bookworm-slim AS build
 WORKDIR /app
 
 COPY package*.json ./

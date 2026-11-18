@@ -1,4 +1,5 @@
-FROM node:20-bookworm-slim
+# Locked Swagger Parser requires Node >=22.19; better-sqlite3 requires Node >=22.
+FROM node:22-bookworm-slim
 
 # Native build dependencies for better-sqlite3
 RUN apt-get update \
