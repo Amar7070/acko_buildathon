@@ -2,6 +2,8 @@ const express = require("express");
 const registry = require("../services/registry.service");
 const specService = require("../services/spec.service");
 const compareService = require("../services/compare.service");
+const changelogService = require("../services/changelog.service");
+const publishService = require("../services/publish.service");
 
 function createServicesRouter(db) {
   const router = express.Router();
@@ -39,6 +41,17 @@ function createServicesRouter(db) {
     const service = registry.resolveService(db, req.params.serviceRef);
     const comparison = await compareService.compareVersions(db, service, req.query.from, req.query.to);
     res.json(comparison);
+  });
+
+  router.get("/:serviceRef/changelog", async (req, res) => {
+    const service = registry.resolveService(db, req.params.serviceRef);
+    const changelog = await changelogService.getChangelog(db, service, req.query.from, req.query.to);
+    res.json(changelog);
+  });
+
+  router.get("/:serviceRef/attempts", (req, res) => {
+    const service = registry.resolveService(db, req.params.serviceRef);
+    res.json({ attempts: publishService.listAttemptsForService(db, service.id) });
   });
 
   return router;

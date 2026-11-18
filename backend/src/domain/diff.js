@@ -58,6 +58,7 @@ function makeChange({
     parameter,
     before,
     after,
+    isInternal: operation.internal === true,
     description,
   };
 }
@@ -116,6 +117,30 @@ function compareSchemaDescriptor(prefix, context, oldSchema, newSchema, changes)
         before: oldSchema.enum,
         after: newSchema.enum,
         description: `${target} allowed values changed on ${endpointName(context.operation)}.`,
+      }),
+    );
+  }
+
+  if (oldSchema.deprecated !== newSchema.deprecated) {
+    changes.push(
+      makeChange({
+        ...context,
+        kind: `${prefix}_deprecated_changed`,
+        before: oldSchema.deprecated,
+        after: newSchema.deprecated,
+        description: `${target} is ${newSchema.deprecated ? "now" : "no longer"} marked deprecated on ${endpointName(context.operation)}.`,
+      }),
+    );
+  }
+
+  if (oldSchema.sunset !== newSchema.sunset) {
+    changes.push(
+      makeChange({
+        ...context,
+        kind: `${prefix}_sunset_changed`,
+        before: oldSchema.sunset,
+        after: newSchema.sunset,
+        description: `${target} sunset date changed from ${oldSchema.sunset || "none"} to ${newSchema.sunset || "none"} on ${endpointName(context.operation)}.`,
       }),
     );
   }

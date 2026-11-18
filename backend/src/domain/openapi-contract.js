@@ -123,6 +123,8 @@ function describeSchema(schema) {
     format: effective.format || null,
     nullable: effective.nullable === true,
     enum: Array.isArray(effective.enum) ? [...effective.enum] : null,
+    deprecated: effective.deprecated === true,
+    sunset: typeof effective["x-sunset"] === "string" ? effective["x-sunset"] : null,
   };
 }
 

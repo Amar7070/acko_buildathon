@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const { createServicesRouter } = require("./routes/services.routes");
 const { createSpecsRouter } = require("./routes/specs.routes");
+const { createConsumersRouter } = require("./routes/consumers.routes");
+const { createMetricsRouter } = require("./routes/metrics.routes");
 const { errorHandler } = require("./middleware/error.middleware");
 const { AppError } = require("./utils/errors");
 
@@ -31,6 +33,8 @@ function createApp(db) {
 
   app.use("/api/v1/services", createServicesRouter(db));
   app.use("/api/v1/specs", createSpecsRouter(db));
+  app.use("/api/v1/consumers", createConsumersRouter(db));
+  app.use("/api/v1/metrics", createMetricsRouter(db));
 
   app.use((req, res, next) => {
     next(new AppError(404, "NOT_FOUND", `No route matches ${req.method} ${req.originalUrl}.`));

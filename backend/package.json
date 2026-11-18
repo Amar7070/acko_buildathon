@@ -4,9 +4,12 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "test": "node --test tests/spec-upload.test.js tests/starter-files.test.js tests/compare-unit.test.js tests/diff-api.test.js",
+    "test": "node --test tests/spec-upload.test.js tests/starter-files.test.js tests/compare-unit.test.js tests/diff-api.test.js tests/classify-unit.test.js tests/impact-unit.test.js tests/consumer-api.test.js tests/consumer-impact-rules.test.js tests/impact-acceptance.test.js tests/publish-api.test.js tests/e2e-starter-workflow.test.js",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "import:consumers": "node scripts/import-consumers.js",
+    "seed:starter": "node scripts/seed-starter-kit.js",
+    "seed": "node scripts/seed-starter-kit.js"
   },
   "keywords": [],
   "author": "",
