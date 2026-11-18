@@ -11,7 +11,7 @@ function buildQuery(params = {}) {
 }
 
 async function request(path, options = {}) {
-  const { rawBody, json, headers, ...rest } = options;
+  const { rawBody, json, headers, allowStatuses, ...rest } = options;
   const init = { ...rest, headers: { ...(headers || {}) } };
 
   if (rawBody !== undefined) {
@@ -28,7 +28,8 @@ async function request(path, options = {}) {
     try { data = JSON.parse(text); } catch { data = text; }
   }
 
-  if (!res.ok) {
+  const isAllowed = Array.isArray(allowStatuses) && allowStatuses.includes(res.status);
+  if (!res.ok && !isAllowed) {
     const message = (data && data.error && data.error.message)
       || (data && data.message)
       || (typeof data === 'string' ? data : `Request failed (${res.status})`);
@@ -67,7 +68,7 @@ export const api = {
   specImpact: (id, params = {}) =>
     request(`/api/v1/specs/${encodeURIComponent(id)}/impact${buildQuery(params)}`),
   publishSpec: (id, payload = {}) =>
-    request(`/api/v1/specs/${encodeURIComponent(id)}/publish`, { method: 'POST', json: payload }),
+    request(`/api/v1/specs/${encodeURIComponent(id)}/publish`, { method: 'POST', json: payload, allowStatuses: [409] }),
 
   listConsumers: () => request('/api/v1/consumers'),
   importConsumers: (directory) =>

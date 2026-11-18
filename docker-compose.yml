@@ -1,7 +1,16 @@
-# Contract Guard starter kit: backend + database + webhook receiver.
+# Contract Guard starter kit: frontend + backend + database + webhook receiver.
 # Specs and consumer files remain plain files in this folder (not modified).
 # Start:  docker compose up --build     (Podman: podman compose up --build)
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+
   backend:
     build:
       context: .
